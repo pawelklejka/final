@@ -1,0 +1,40 @@
+---
+  - name: Add epel-release repo
+    yum:
+      name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      state: present
+
+  - name: Enable epel repo
+    become: yes
+    shell: yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
+
+  - name: Install python2
+    yum:
+      name: python
+      state: present
+
+  - name: Install certbot
+    become: yes
+    yum:
+      name: python2-certbot-nginx
+      state: present
+
+  #
+  #- name: Execute cerbot
+   # shell: certbot -i nginx -d "{{domain}}" --nginx -m "{{mail}}" --agree-tos --redirect
+
+  - name: Install nginx
+    yum:
+      name: nginx
+      state: present
+
+  - name: Insert loadbalancer
+    template:
+      src: loadbalancer.conf
+      dest: /etc/nginx/conf.d/loadbalancer.conf
+
+  - name: Start NGiNX
+    service:
+      name: nginx
+      state: restarted
+

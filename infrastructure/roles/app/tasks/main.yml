@@ -1,0 +1,34 @@
+- name: install java
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: create directory for webapp
+  file:
+    path: /opt/carrental
+    state: directory
+    mode: 0755
+
+- name: create user for webapp.service
+  user:
+    name: "{{app_user}}"
+
+- name: copy webapp jar from local source
+  copy:
+    src: /home/ec2-user/environment/199979/adsk/credit-card/car-rental/my-car-renta-spring/target/carrental-0.0.1-SNAPSHOT.jar
+    dest: "{{app_path}}"
+
+- name: copy webapp.service
+  template:
+    src: carrental.service
+    dest: /etc/systemd/system/carrental.service
+
+- name: start webapp
+  systemd:
+    name: carrental.service
+    state: restarted
+
+#- name: download webapp jar from external source
+ # get_url:
+  #  url: "{{jar_webpath}}"
+   # dest: "{{app_path}}"

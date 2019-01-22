@@ -1,0 +1,15 @@
+---
+  packages:
+      - httpd
+      #- mysql        uncomment when can't install mariadb
+      #- mysql-server
+      - mariadb
+      - mariadb-server
+      - python2
+      - MySQL-python
+      - php
+      - php-mysql
+
+  dbuser: admin
+  dbpassword: admin
+  dbname: mysqldb

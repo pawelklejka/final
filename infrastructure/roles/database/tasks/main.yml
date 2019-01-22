@@ -1,0 +1,30 @@
+---
+- name: Install packages
+  yum:
+    name: "{{packages}}"
+    state: present
+- name: Start db
+  service:
+    #name: mysqld uncomment when database service is mysqld
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Remove default db user
+  mysql_user:
+    name: ''
+    host: localhost
+    state: absent
+
+- name: Create database user
+  mysql_user:
+    name: "{{dbuser}}"
+    password: "{{dbpassword}}"
+    priv: '*.*:ALL'
+    host: '%'
+    state: present
+
+- name: Add database
+  mysql_db:
+    name: "{{dbname}}"
+    state: present

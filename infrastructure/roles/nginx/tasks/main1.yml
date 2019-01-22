@@ -1,0 +1,35 @@
+---
+#main for Amazon Linux AMI 2018.03.0 (HVM)
+  - name: Add epel-release repo
+    yum:
+      name: epel-release
+      state: present
+
+  - name: Download certbot repository file
+    get_url:
+      url: "https://dl.eff.org/certbot-auto"
+      dest: /usr/local/bin/certbot-auto
+
+  - name: Set rwx chmod
+    file:
+      path: /usr/local/bin/certbot-auto
+      state: touch
+      mode: "+rwx"
+
+  - name: Install nginx
+    yum:
+      name: nginx
+      state: present
+
+  - name: Execute cerbot
+    shell: /usr/local/bin/certbot-auto -i nginx -d "pawkle.tk" --nginx -m "asd@gmail.com" --agree-tos --redirect
+
+  - name: Insert proxy
+    template:
+      src: proxy.conf
+      dest: /etc/nginx/conf.d/
+
+  - name: Start NGiNX
+    service:
+      name: nginx
+      state: started

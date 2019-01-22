@@ -1,0 +1,50 @@
+---
+- name: Create influxdb datasource
+  tags: [grafana]
+  grafana_datasource:
+    name: "{{datasource_name}}"
+    grafana_url: "http://127.0.0.1:3000"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    org_id: "1"
+    ds_type: "influxdb"
+    url: "http://localhost:8086"
+    database: "{{metrics_database_name}}"
+    password: "{{metrics_database_password}}"
+    user: "{{metrics_database_user}}"
+
+- template:
+    src: dashboard/my.json
+    dest: /tmp/my.json
+  tags: [grafana]
+
+- name: Import grafana test dashboard
+  tags: [grafana, dashboard]
+  grafana_dashboard:
+    grafana_url: "http://127.0.0.1:3000"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    state: present
+    slug: apache
+    message: Updated by ansible
+    overwrite: yes
+    path: /tmp/my.json
+  ignore_errors: yes
+
+- template:
+    src: dashboard/apps.json
+    dest: /tmp/apps.json
+  tags: [grafana]
+
+- name: Import grafana app1,app2 dashboard
+  tags: [grafana, dashboard]
+  grafana_dashboard:
+    grafana_url: "http://127.0.0.1:3000"
+    grafana_user: "admin"
+    grafana_password: "admin"
+    state: present
+    slug: apache
+    message: Updated by ansible
+    overwrite: yes
+    path: /tmp/apps.json
+  ignore_errors: yes
