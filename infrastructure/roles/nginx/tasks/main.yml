@@ -19,9 +19,6 @@
       name: python2-certbot-nginx
       state: present
 
-  #
-  #- name: Execute cerbot
-   # shell: certbot -i nginx -d "{{domain}}" --nginx -m "{{mail}}" --agree-tos --redirect
 
   - name: Install nginx
     yum:
@@ -37,4 +34,6 @@
     service:
       name: nginx
       state: restarted
-
+  #error
+  #- name: Execute cerbot
+    #shell: certbot --force-interactive -i nginx -d "{{domain}}" --nginx -m "{{mail}}" --agree-tos --redirect
